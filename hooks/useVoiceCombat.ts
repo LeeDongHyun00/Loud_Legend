@@ -205,56 +205,53 @@ export function useVoiceCombat(classId: string, baseDb: number) {
     }
   };
 
+  const normalizedWord = attackWord.replace(/[!.?]/g, "").trim();
+
+  // Real-time keyword matching evaluation
+  const currentUltimate = ULTIMATE_SKILLS.find((u) =>
+    fuzzyMatch(normalizedWord, u.word),
+  );
+  const currentNovice = !currentUltimate
+    ? NOVICE_KEYWORDS.find((n) => fuzzyMatch(normalizedWord, n.word))
+    : null;
+  const currentMatchedKeyword =
+    currentUltimate?.word || currentNovice?.word || "";
+
   const calculateDamageInfo = (targetName: string) => {
     const rawNetDb = Math.max(0, peakDb - baseDb);
     const netDb = normalizeDb(rawNetDb);
 
-    const normalizedWord = attackWord.replace(/[!.?]/g, "").trim();
     let baseDamage = 0;
     let isUltimate = false;
-    let matchedKeyword = "";
+    let matchedKeyword = currentMatchedKeyword;
     const logs: string[] = [];
 
-    if (!normalizedWord) {
-      logs.push("키워드가 감지되지 않았습니다. 입을 열어 외치세요!");
+    if (!normalizedWord || !matchedKeyword) {
+      logs.push(
+        "유효한 액션 키워드가 감지되지 않았습니다. 정확하게 외쳐주세요!",
+      );
       return { damage: 0, logs, matchedKeyword: "" };
     }
 
-    // 1. Check Ultimate Skills
-    const ultimate = ULTIMATE_SKILLS.find((u) =>
-      fuzzyMatch(normalizedWord, u.word),
-    );
-    if (ultimate) {
-      if (peakDb >= ultimate.reqDb) {
-        baseDamage = ultimate.baseDmg;
+    if (currentUltimate) {
+      if (peakDb >= currentUltimate.reqDb) {
+        baseDamage = currentUltimate.baseDmg;
         isUltimate = true;
-        matchedKeyword = ultimate.word;
-        logs.push(`[절대 공명] ${ultimate.word}!!`);
+        logs.push(`[절대 공명] ${currentUltimate.word}!!`);
       } else {
         logs.push(
-          `공명 파동이 얕습니다... (현재 최고 Peak dB: ${Math.round(peakDb)} / 요구치: ${ultimate.reqDb})`,
+          `공명 파동이 얕습니다... (현재 최고 Peak dB: ${Math.round(peakDb)} / 요구치: ${currentUltimate.reqDb})`,
         );
         return { damage: 0, logs, matchedKeyword: "" };
       }
-    } else {
-      // 2. Check Novice Keywords (fuzzy match)
-      const novice = NOVICE_KEYWORDS.find((n) =>
-        fuzzyMatch(normalizedWord, n.word),
-      );
-      if (novice) {
-        baseDamage = novice.baseDmg;
-        matchedKeyword = novice.word;
-        logs.push(`[액션 키워드 발동] ${novice.word}!`);
-      } else {
-        logs.push(
-          `(올바른 액션 키워드를 외치지 않았습니다. 예: ...소닉 펀치!)`,
-        );
-        return { damage: 0, logs, matchedKeyword: "" };
-      }
+    } else if (currentNovice) {
+      baseDamage = currentNovice.baseDmg;
+      logs.push(`[액션 키워드 발동] ${currentNovice.word}!`);
     }
 
     // Damage Formula: BaseDamage * (1 + netDb * 0.05)
     const multiplier = 1 + netDb * 0.05;
+
     let finalDamage = Math.floor(baseDamage * multiplier);
 
     // Class Adjustments
@@ -300,6 +297,7 @@ export function useVoiceCombat(classId: string, baseDb: number) {
     currentDb,
     peakDb,
     attackWord,
+    currentMatchedKeyword,
     isListening,
     startListening,
     stopListening,

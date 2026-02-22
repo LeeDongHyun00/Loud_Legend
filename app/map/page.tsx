@@ -44,15 +44,31 @@ export default function MapPage() {
   );
   const [currentStage, setCurrentStage] = useState(0);
   const [showGrimoire, setShowGrimoire] = useState(false);
+  const [showIntro, setShowIntro] = useState(false);
+  const [introStep, setIntroStep] = useState(0);
+
+  const INTRO_SCRIPT = [
+    {
+      text: "오오... 이 놀라운 파동은...! 거짓말이 아니었어. 천 년의 침묵을 찢고 드디어 그대가 강림했군.",
+    },
+    {
+      text: "이 세계는 '거대한 침묵(The Silence)'이라는 부패에 의해 모든 색과 소리를 빼앗기고 있다네. 오직 그대만이, 이 저주받은 운명을 깰 '마지막 메아리(The Last Echo)'라네.",
+    },
+    {
+      text: "설명할 시간이 없네! 침묵의 군단이 그대의 빛나는 파동을 감지하고 몰려오기 시작했어. 어서 나를 따라 '훈련장(Training Grounds)'으로 오게. 그대의 진정한 목소리를 일깨워주지!",
+    },
+  ];
 
   useEffect(() => {
     if (status === "authenticated" && typeof window !== "undefined") {
       const hasCalibrated = localStorage.getItem("baseDb");
       if (!hasCalibrated) {
         router.push("/calibration");
+      } else if (session?.user?.exp === 0) {
+        setShowIntro(true);
       }
     }
-  }, [status, router]);
+  }, [status, router, session]);
 
   if (status === "loading") {
     return (
@@ -183,7 +199,7 @@ export default function MapPage() {
       </motion.div>
 
       {/* 2. Stage Navigation UI (Left / Right) */}
-      <div className="absolute inset-y-0 left-4 flex items-center z-40 pointer-events-none">
+      <div className="absolute inset-y-0 left-4 flex items-center z-50 pointer-events-none">
         <AnimatePresence>
           {currentStage > 0 && (
             <motion.button
@@ -203,7 +219,7 @@ export default function MapPage() {
         </AnimatePresence>
       </div>
 
-      <div className="absolute inset-y-0 right-4 flex items-center z-40 pointer-events-none">
+      <div className="absolute inset-y-0 right-4 flex items-center z-50 pointer-events-none">
         <AnimatePresence>
           {currentStage < STAGES.length - 1 && (
             <motion.button
@@ -299,8 +315,8 @@ export default function MapPage() {
         </div>
       </div>
 
-      {/* ═══ 4B. DESKTOP Right Sidebar (hidden on mobile) ═══ */}
-      <div className="hidden md:flex absolute top-4 right-4 bottom-4 z-50 w-64 flex-col gap-3">
+      {/* ═══ 4B. DESKTOP Left Sidebar (hidden on mobile) ═══ */}
+      <div className="hidden md:flex absolute bottom-6 left-8 z-40 w-72 flex-col gap-3 h-fit max-h-[calc(100vh-3rem)]">
         {/* Player Status Panel */}
         <div className="panel-fantasy bg-black/70 backdrop-blur-xl p-5 border border-amber-500/30 shadow-2xl">
           <div className="flex items-center gap-3 mb-3">
@@ -382,6 +398,57 @@ export default function MapPage() {
           </button>
         </div>
       </div>
+
+      {/* ═══ FIRST-TIME INTRO MODAL ═══ */}
+      <AnimatePresence>
+        {showIntro && (
+          <div className="absolute inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+            <motion.div
+              key={introStep}
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: -20 }}
+              transition={{ duration: 0.4 }}
+              className="max-w-xl w-full panel-fantasy bg-black/90 p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 border-amber-500/50 shadow-[0_0_50px_rgba(245,166,35,0.3)] text-center md:text-left relative overflow-hidden">
+              <div className="w-24 h-24 md:w-32 md:h-32 rounded-full border-2 border-amber-400 overflow-hidden flex-shrink-0 shadow-[0_0_15px_rgba(245,166,35,0.6)]">
+                <Image
+                  src="/maestro-npc.png"
+                  alt="Maestro"
+                  width={128}
+                  height={128}
+                  className="object-cover"
+                />
+              </div>
+              <div className="flex-1 flex flex-col items-center md:items-start">
+                <span className="text-sm font-bold text-amber-500 tracking-widest uppercase mb-1 drop-shadow-md">
+                  안내자 마에스트로
+                </span>
+                <p className="text-base md:text-lg text-gray-200 leading-relaxed break-keep font-medium min-h-[5rem]">
+                  &ldquo;{INTRO_SCRIPT[introStep].text}&rdquo;
+                </p>
+                <button
+                  onClick={() => {
+                    if (introStep < INTRO_SCRIPT.length - 1) {
+                      setIntroStep((prev) => prev + 1);
+                    } else {
+                      setShowIntro(false);
+                      if (scarecrow) setSelectedMonster(scarecrow);
+                    }
+                  }}
+                  className={`mt-6 px-6 py-3 rounded-xl font-bold transition-all ${
+                    introStep === INTRO_SCRIPT.length - 1
+                      ? "btn-gold shadow-[0_0_20px_rgba(251,191,36,0.6)] animate-pulse"
+                      : "bg-gray-800 hover:bg-gray-700 text-amber-200 border border-amber-500/30"
+                  }`}>
+                  {introStep === INTRO_SCRIPT.length - 1
+                    ? "✨ 훈련장으로 이동하여 서막을 연다"
+                    : "계속 듣는다 →"}
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
       {/* NPC 모달 */}
       <AnimatePresence>

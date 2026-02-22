@@ -76,6 +76,7 @@ export default function CombatClient({
     currentDb,
     peakDb,
     attackWord,
+    currentMatchedKeyword,
     isListening,
     startListening,
     stopListening,
@@ -210,7 +211,9 @@ export default function CombatClient({
 
   // Tutorial: gate combat controls behind tutorial steps
   const canResonate = isTutorial ? tutStep >= 2 && tutStep <= 3 : true;
-  const canAttack = isTutorial ? tutStep === 3 && !!attackWord : !!attackWord;
+  const canAttack = isTutorial
+    ? tutStep === 3 && !!currentMatchedKeyword
+    : !!currentMatchedKeyword;
 
   const getBiomeBackground = (biome: string) => {
     switch (biome) {
@@ -392,12 +395,20 @@ export default function CombatClient({
             exit={{ opacity: 0, y: 10 }}
             className="absolute left-1/2 -translate-x-1/2 z-35 px-3"
             style={{ bottom: "48%" }}>
-            <div className="flex items-center gap-2 bg-black/80 backdrop-blur-xl border border-cyan-500/40 rounded-full px-4 py-2 shadow-[0_0_20px_rgba(34,211,238,0.3)] max-w-xs">
-              <span className="w-3 h-3 rounded-full bg-red-500 animate-pulse flex-shrink-0" />
+            <div
+              className={`flex items-center gap-2 backdrop-blur-xl border rounded-full px-4 py-2 max-w-xs transition-all duration-300 ${
+                currentMatchedKeyword
+                  ? "bg-green-950/80 border-green-400/80 shadow-[0_0_30px_rgba(74,222,128,0.4)]"
+                  : "bg-black/80 border-cyan-500/40 shadow-[0_0_20px_rgba(34,211,238,0.3)]"
+              }`}>
+              <span
+                className={`w-3 h-3 rounded-full animate-pulse flex-shrink-0 ${currentMatchedKeyword ? "bg-green-400" : "bg-red-500"}`}
+              />
               <span className="text-xs text-gray-400 font-bold flex-shrink-0">
-                🎤
+                {currentMatchedKeyword ? "✅" : "🎤"}
               </span>
-              <span className="text-sm text-cyan-300 font-bold truncate">
+              <span
+                className={`text-sm font-bold truncate ${currentMatchedKeyword ? "text-green-300 drop-shadow-[0_0_8px_rgba(74,222,128,0.8)]" : "text-cyan-300"}`}>
                 {attackWord || "음파 감지 중..."}
               </span>
             </div>
