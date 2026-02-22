@@ -388,60 +388,39 @@ export default function CombatClient({
         </motion.div>
       </div>
 
-      {/* ═══ THE ECHO MIRROR (LIVE STT VISUALIZER) ═══ */}
+      {/* ═══ LIVE SPEECH SUBTITLES (STT UI) ═══ */}
       <AnimatePresence>
         {isListening && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="absolute left-1/2 -translate-x-1/2 z-35 w-[90%] md:w-[600px] pointer-events-none"
-            style={{ bottom: "45%" }}>
-            <div
-              className={`flex flex-col items-center justify-center min-h-[120px] p-6 backdrop-blur-2xl border rounded-3xl transition-all duration-500 ${
-                currentMatchedKeyword
-                  ? "bg-green-950/60 border-green-400/80 shadow-[0_0_50px_rgba(74,222,128,0.5)]"
-                  : "bg-cyan-950/60 border-cyan-500/50 shadow-[0_0_40px_rgba(34,211,238,0.3)]"
-              }`}>
-              {/* Status Header */}
-              <div className="flex items-center gap-2 mb-3 opacity-80">
-                <span
-                  className={`w-3 h-3 rounded-full animate-ping flex-shrink-0 ${currentMatchedKeyword ? "bg-green-400" : "bg-cyan-400"}`}
-                />
-                <span className="text-xs uppercase tracking-widest font-bold text-gray-300">
-                  {currentMatchedKeyword
-                    ? "Target Locked"
-                    : "Echo Mirror Active"}
-                </span>
-              </div>
-
-              {/* Spectral Text Display */}
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="absolute top-24 md:top-28 left-1/2 -translate-x-1/2 w-[90%] md:w-[700px] z-50 pointer-events-none flex flex-col items-center">
+            <div className="flex items-center gap-2 mb-2 px-3 py-1 bg-black/50 rounded-full border border-gray-700/50 backdrop-blur-md">
               <span
-                className={`text-lg md:text-2xl font-black text-center break-keep leading-relaxed transition-colors duration-300 ${
-                  currentMatchedKeyword
-                    ? "text-green-300 drop-shadow-[0_0_15px_rgba(74,222,128,0.9)]"
-                    : "text-cyan-100 drop-shadow-[0_0_15px_rgba(34,211,238,0.7)]"
-                }`}>
-                {attackWord
-                  ? `"${attackWord}"`
-                  : "목소리를 내어 파동을 일으키세요..."}
+                className={`w-2.5 h-2.5 rounded-full animate-ping ${currentMatchedKeyword ? "bg-green-400" : "bg-red-500"}`}
+              />
+              <span className="text-[10px] font-bold tracking-widest text-gray-300 uppercase">
+                {currentMatchedKeyword
+                  ? "STT: Pattern Matched"
+                  : "STT: Listening..."}
               </span>
+            </div>
 
-              {/* Matched Keyword Highlight */}
-              <AnimatePresence>
-                {currentMatchedKeyword && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0 }}
-                    className="mt-4 px-4 py-1.5 bg-green-900/80 border border-green-400 rounded-full flex items-center gap-2">
-                    <span className="text-sm">✅</span>
-                    <span className="text-sm font-bold text-green-300 tracking-wider">
-                      {currentMatchedKeyword} 장전 완료
-                    </span>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+            <div
+              className={`w-full min-h-[80px] md:min-h-[100px] p-4 md:p-6 backdrop-blur-xl border rounded-2xl flex items-center justify-center transition-all duration-500 shadow-2xl ${
+                currentMatchedKeyword
+                  ? "bg-green-950/70 border-green-400/80 shadow-[0_0_40px_rgba(74,222,128,0.4)]"
+                  : "bg-black/70 border-white/20 shadow-[0_0_30px_rgba(0,0,0,0.8)]"
+              }`}>
+              <span
+                className={`text-xl md:text-3xl font-black text-center break-keep leading-snug transition-colors duration-300 ${
+                  currentMatchedKeyword
+                    ? "text-green-300 drop-shadow-[0_0_15px_rgba(74,222,128,0.8)]"
+                    : "text-white drop-shadow-md"
+                }`}>
+                {attackWord ? `"${attackWord}"` : "마이크에 대고 외쳐보세요!"}
+              </span>
             </div>
           </motion.div>
         )}
