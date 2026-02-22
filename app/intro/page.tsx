@@ -84,7 +84,7 @@ export default function EpicIntroPage() {
   };
 
   return (
-    <div className="flex h-screen items-center justify-center bg-black overflow-hidden relative select-none">
+    <div className="flex min-h-[100svh] items-center justify-center bg-black overflow-hidden relative select-none px-4">
       {/* 백그라운드 효과 */}
       <motion.div
         animate={{

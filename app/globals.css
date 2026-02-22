@@ -22,6 +22,9 @@
 
 html {
   scroll-behavior: smooth;
+  /* iOS safe area support */
+  padding: env(safe-area-inset-top) env(safe-area-inset-right)
+    env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
 
 body {
@@ -30,6 +33,10 @@ body {
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Prevent overscroll bounce on iOS */
+  overscroll-behavior: none;
+  /* Prevent text selection on game elements */
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* 판타지 RPG 제목 폰트 */
@@ -80,5 +87,11 @@ h3 {
     text-shadow:
       0 0 10px rgba(220, 38, 38, 0.5),
       0 0 20px rgba(220, 38, 38, 0.3);
+  }
+
+  .text-glow-cyan {
+    text-shadow:
+      0 0 10px rgba(34, 211, 238, 0.5),
+      0 0 20px rgba(34, 211, 238, 0.3);
   }
 }

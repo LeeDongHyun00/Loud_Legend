@@ -75,7 +75,17 @@ export function useVoiceCombat(classId: string, baseDb: number) {
     try {
       if (isListening) return;
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      audioContextRef.current = new window.AudioContext();
+
+      // iOS: Use webkitAudioContext fallback and resume after user gesture
+      const AudioCtx =
+        window.AudioContext || (window as any).webkitAudioContext;
+      audioContextRef.current = new AudioCtx();
+
+      // iOS autoplay policy: must resume AudioContext initiated by user gesture
+      if (audioContextRef.current.state === "suspended") {
+        await audioContextRef.current.resume();
+      }
+
       analyserRef.current = audioContextRef.current.createAnalyser();
       microphoneRef.current =
         audioContextRef.current.createMediaStreamSource(stream);
@@ -86,7 +96,7 @@ export function useVoiceCombat(classId: string, baseDb: number) {
       const dataArray = new Uint8Array(bufferLength);
 
       setIsListening(true);
-      setPeakDb(0); // 기합 모으기 시작 시 초기화
+      setPeakDb(0);
       setAttackWord("");
 
       const updateDb = () => {
@@ -102,7 +112,6 @@ export function useVoiceCombat(classId: string, baseDb: number) {
         setCurrentDb(mappedDb);
         setPeakDb((prev) => Math.max(prev, mappedDb));
 
-        // Keep updating as long as we map this frame
         animationFrameRef.current = requestAnimationFrame(updateDb);
       };
 
@@ -112,9 +121,14 @@ export function useVoiceCombat(classId: string, baseDb: number) {
           recognitionRef.current.start();
         } catch (e) {}
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error("마이크 접근 권한 오류:", err);
-      alert("마이크 사용 권한을 허용해주세요!");
+      // Don't use alert() — let the calling component handle the error via isListening state
+      if (err.name === "NotAllowedError") {
+        console.warn(
+          "마이크 권한이 거부되었습니다. 브라우저 설정을 확인해주세요.",
+        );
+      }
     }
   };
 
