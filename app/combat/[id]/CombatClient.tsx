@@ -383,6 +383,27 @@ export default function CombatClient({
         </motion.div>
       </div>
 
+      {/* ═══ LIVE STT TRANSCRIPT PILL ═══ */}
+      <AnimatePresence>
+        {isListening && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            className="absolute left-1/2 -translate-x-1/2 z-35 px-3"
+            style={{ bottom: "48%" }}>
+            <div className="flex items-center gap-2 bg-black/80 backdrop-blur-xl border border-cyan-500/40 rounded-full px-4 py-2 shadow-[0_0_20px_rgba(34,211,238,0.3)] max-w-xs">
+              <span className="w-3 h-3 rounded-full bg-red-500 animate-pulse flex-shrink-0" />
+              <span className="text-xs text-gray-400 font-bold flex-shrink-0">
+                🎤
+              </span>
+              <span className="text-sm text-cyan-300 font-bold truncate">
+                {attackWord || "음파 감지 중..."}
+              </span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       {/* ══════════════════════════════════════════════ */}
       {/* 4. CINEMATIC DIALOGUE HUD (Tutorial Only) */}
       {/* ══════════════════════════════════════════════ */}

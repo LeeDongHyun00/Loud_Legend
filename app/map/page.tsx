@@ -239,9 +239,8 @@ export default function MapPage() {
         </motion.div>
       </div>
 
-      {/* 4. Unified Bottom Dock — Mobile-First Control Hub */}
-      <div className="absolute bottom-0 left-0 right-0 z-50 pb-[env(safe-area-inset-bottom)]">
-        {/* Slim Status Bar */}
+      {/* ═══ 4A. MOBILE Bottom Dock (hidden on md+) ═══ */}
+      <div className="absolute bottom-0 left-0 right-0 z-50 pb-[env(safe-area-inset-bottom)] md:hidden">
         <div className="mx-3 mb-2 panel-fantasy bg-black/70 backdrop-blur-md p-3 px-4 flex items-center justify-between border border-amber-500/30">
           <div className="flex items-center gap-2 min-w-0">
             <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse flex-shrink-0" />
@@ -253,7 +252,7 @@ export default function MapPage() {
             </span>
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">
-            <div className="w-20 md:w-32 bg-gray-900 rounded-full h-2 border border-gray-700 relative overflow-hidden">
+            <div className="w-20 bg-gray-900 rounded-full h-2 border border-gray-700 relative overflow-hidden">
               <div
                 className="absolute top-0 left-0 h-full bg-gradient-to-r from-amber-600 to-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.6)]"
                 style={{ width: "45%" }}
@@ -262,10 +261,7 @@ export default function MapPage() {
             <span className="text-[9px] text-gray-400 font-bold">EXP</span>
           </div>
         </div>
-
-        {/* Action Button Row — 4 equal buttons */}
         <div className="mx-3 mb-3 grid grid-cols-4 gap-2">
-          {/* Grimoire */}
           <button
             onClick={() => setShowGrimoire(true)}
             className="min-h-[56px] flex flex-col items-center justify-center gap-1 panel-fantasy bg-black/70 backdrop-blur-md border-amber-500/40 hover:border-amber-400 hover:bg-black/90 transition-all active:scale-95">
@@ -274,8 +270,6 @@ export default function MapPage() {
               마도서
             </span>
           </button>
-
-          {/* Trials */}
           <button
             onClick={() => router.push("/trial")}
             className="min-h-[56px] flex flex-col items-center justify-center gap-1 panel-fantasy bg-cyan-950/60 backdrop-blur-md border-cyan-500/40 hover:border-cyan-400 hover:bg-cyan-900/80 transition-all active:scale-95">
@@ -284,8 +278,6 @@ export default function MapPage() {
               시련
             </span>
           </button>
-
-          {/* Settings / Calibration */}
           <button
             onClick={() => router.push("/calibration")}
             className="min-h-[56px] flex flex-col items-center justify-center gap-1 panel-fantasy bg-black/70 backdrop-blur-md border-slate-500/40 hover:border-slate-400 hover:bg-black/90 transition-all active:scale-95">
@@ -294,8 +286,6 @@ export default function MapPage() {
               설정
             </span>
           </button>
-
-          {/* Tutorial Replay */}
           <button
             onClick={() => {
               if (scarecrow) setSelectedMonster(scarecrow);
@@ -305,6 +295,90 @@ export default function MapPage() {
             <span className="text-[9px] text-amber-200 font-bold tracking-wider">
               훈련
             </span>
+          </button>
+        </div>
+      </div>
+
+      {/* ═══ 4B. DESKTOP Right Sidebar (hidden on mobile) ═══ */}
+      <div className="hidden md:flex absolute top-4 right-4 bottom-4 z-50 w-64 flex-col gap-3">
+        {/* Player Status Panel */}
+        <div className="panel-fantasy bg-black/70 backdrop-blur-xl p-5 border border-amber-500/30 shadow-2xl">
+          <div className="flex items-center gap-3 mb-3">
+            <span className="w-3 h-3 rounded-full bg-amber-400 animate-pulse" />
+            <div>
+              <span className="text-[10px] text-amber-400 tracking-widest uppercase font-bold block">
+                음파 술사 (Vocalist)
+              </span>
+              <span className="text-lg font-black text-white">
+                {userNickname}
+              </span>
+            </div>
+          </div>
+          <div className="flex items-center justify-between text-sm mb-2">
+            <span className="text-amber-400 font-black text-xl">
+              Lv.{userLevel}
+            </span>
+          </div>
+          <div className="w-full bg-gray-900 rounded-full h-2.5 border border-gray-700 relative overflow-hidden mb-1">
+            <div
+              className="absolute top-0 left-0 h-full bg-gradient-to-r from-amber-600 to-amber-400 shadow-[0_0_10px_rgba(251,191,36,0.8)]"
+              style={{ width: "45%" }}
+            />
+          </div>
+          <p className="text-[10px] text-right text-gray-400 font-bold uppercase">
+            공명 경험치: 45%
+          </p>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex flex-col gap-2 flex-1">
+          <button
+            onClick={() => setShowGrimoire(true)}
+            className="flex items-center gap-3 px-4 py-3 panel-fantasy bg-black/70 backdrop-blur-md border-amber-500/40 hover:border-amber-400 hover:bg-black/90 transition-all hover:scale-[1.02]">
+            <span className="text-2xl">📖</span>
+            <div className="flex flex-col items-start">
+              <span className="text-sm text-amber-200 font-bold">마도서</span>
+              <span className="text-[10px] text-gray-500">
+                Attack Compendium
+              </span>
+            </div>
+          </button>
+          <button
+            onClick={() => router.push("/trial")}
+            className="flex items-center gap-3 px-4 py-3 panel-fantasy bg-cyan-950/60 backdrop-blur-md border-cyan-500/40 hover:border-cyan-400 hover:bg-cyan-900/80 transition-all hover:scale-[1.02]">
+            <span className="text-2xl">🎙️</span>
+            <div className="flex flex-col items-start">
+              <span className="text-sm text-cyan-200 font-bold">
+                목소리의 시련
+              </span>
+              <span className="text-[10px] text-gray-500">
+                Trial of the Voice
+              </span>
+            </div>
+          </button>
+          <button
+            onClick={() => router.push("/calibration")}
+            className="flex items-center gap-3 px-4 py-3 panel-fantasy bg-black/70 backdrop-blur-md border-slate-500/40 hover:border-slate-400 hover:bg-black/90 transition-all hover:scale-[1.02]">
+            <span className="text-2xl">⚙️</span>
+            <div className="flex flex-col items-start">
+              <span className="text-sm text-slate-300 font-bold">
+                음향 설정
+              </span>
+              <span className="text-[10px] text-gray-500">
+                Audio Calibration
+              </span>
+            </div>
+          </button>
+          <button
+            onClick={() => {
+              if (scarecrow) setSelectedMonster(scarecrow);
+            }}
+            className="flex items-center gap-3 px-4 py-3 panel-fantasy bg-black/70 backdrop-blur-md border-amber-500/40 hover:border-amber-400 hover:bg-black/90 transition-all hover:scale-[1.02]">
+            <span className="text-2xl">🪗</span>
+            <div className="flex flex-col items-start">
+              <span className="text-sm text-amber-200 font-bold">튜토리얼</span>
+              <span className="text-[10px] text-gray-500">Training Replay</span>
+            </div>
           </button>
         </div>
       </div>
