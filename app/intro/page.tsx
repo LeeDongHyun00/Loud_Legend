@@ -62,7 +62,7 @@ export default function EpicIntroPage() {
     if (!isLast) {
       setStep((prev) => prev + 1);
     } else {
-      router.push("/tutorial");
+      router.push("/map");
     }
   };
 
