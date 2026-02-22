@@ -56,7 +56,7 @@ export default function MapPage() {
 
   if (status === "loading") {
     return (
-      <div className="h-screen flex items-center justify-center bg-[var(--color-deep-navy)]">
+      <div className="min-h-[100svh] flex items-center justify-center bg-[var(--color-deep-navy)]">
         <motion.div
           animate={{ opacity: [0.3, 1, 0.3] }}
           transition={{ repeat: Infinity, duration: 1.5 }}
@@ -99,7 +99,7 @@ export default function MapPage() {
   const activeStage = STAGES[currentStage];
 
   return (
-    <main className="relative w-full h-screen overflow-hidden font-sans select-none bg-[var(--color-deep-navy)]">
+    <main className="relative w-full h-[100svh] overflow-hidden font-sans select-none bg-[var(--color-deep-navy)]">
       {/* 1. Stage-Based Map Container (Animated pan & zoom) */}
       <motion.div
         animate={{
@@ -239,102 +239,75 @@ export default function MapPage() {
         </motion.div>
       </div>
 
-      {/* 4. 상단 좌측: 시련의 전당 (Trial Hub) 진입 */}
-      <div className="absolute top-4 left-6 z-50">
-        <Link
-          href="/trial"
-          className="flex items-center gap-3 px-5 py-3 bg-cyan-950/60 backdrop-blur-md border border-cyan-500/50 rounded-2xl text-cyan-100 hover:text-white hover:bg-cyan-900 group transition-all shadow-[0_0_20px_rgba(8,145,178,0.4)] hover:shadow-[0_0_30px_rgba(34,211,238,0.6)]">
-          <span className="text-2xl group-hover:scale-110 transition-transform text-cyan-400 drop-shadow-[0_0_10px_rgba(34,211,238,0.8)]">
-            🎙️
-          </span>
-          <div className="flex flex-col">
-            <span className="text-sm font-black tracking-wider">
-              목소리의 시련
+      {/* 4. Unified Bottom Dock — Mobile-First Control Hub */}
+      <div className="absolute bottom-0 left-0 right-0 z-50 pb-[env(safe-area-inset-bottom)]">
+        {/* Slim Status Bar */}
+        <div className="mx-3 mb-2 panel-fantasy bg-black/70 backdrop-blur-md p-3 px-4 flex items-center justify-between border border-amber-500/30">
+          <div className="flex items-center gap-2 min-w-0">
+            <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse flex-shrink-0" />
+            <span className="text-xs text-amber-400 font-bold tracking-wider truncate">
+              Lv.{userLevel}
+            </span>
+            <span className="text-sm font-black text-white truncate">
+              {userNickname}
             </span>
           </div>
-        </Link>
-      </div>
-
-      {/* 5. 좌측 하단 — 튜토리얼 & 설정 */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.3 }}
-        className="absolute bottom-6 left-6 z-50 flex gap-4">
-        <button
-          onClick={() => {
-            if (scarecrow) setSelectedMonster(scarecrow);
-          }}
-          className="group flex flex-col items-center px-4 py-3 panel-fantasy border-amber-500/50 bg-[#0a0e1a]/95 hover:border-amber-400 hover:shadow-[0_0_20px_rgba(245,166,35,0.4)] transition-all hover:scale-105">
-          <div className="w-12 h-12 rounded-full border-2 border-amber-400 overflow-hidden shadow-inner group-hover:scale-110 transition-transform">
-            <Image
-              src="/maestro-npc.png"
-              alt="maestro"
-              width={48}
-              height={48}
-              className="object-cover"
-            />
-          </div>
-          <span className="text-[10px] text-amber-200 mt-2 tracking-widest font-bold uppercase">
-            튜토리얼 다시보기
-          </span>
-        </button>
-
-        <button
-          onClick={() => router.push("/calibration")}
-          className="group flex flex-col items-center px-4 py-3 panel-fantasy border-slate-500/50 bg-[#0a0e1a]/95 hover:border-slate-400 hover:shadow-[0_0_20px_rgba(148,163,184,0.4)] transition-all hover:scale-105">
-          <div className="w-12 h-12 rounded-full border-2 border-slate-400 overflow-hidden shadow-inner flex items-center justify-center text-slate-300 text-2xl group-hover:rotate-90 transition-transform bg-slate-800">
-            ⚙️
-          </div>
-          <span className="text-[10px] text-slate-300 mt-2 tracking-widest font-bold uppercase">
-            음향 설정
-          </span>
-        </button>
-      </motion.div>
-
-      {/* 6. 우측 하단 — Player HUD */}
-      <motion.div
-        initial={{ opacity: 0, x: 50 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.4 }}
-        className="absolute bottom-6 right-6 z-50 flex items-end gap-3">
-        {/* Grimoire Button */}
-        <button
-          onClick={() => setShowGrimoire(true)}
-          className="w-14 h-14 rounded-full bg-[#161b22]/90 border border-amber-500/40 shadow-[0_0_20px_rgba(251,191,36,0.3)] flex items-center justify-center text-2xl hover:bg-[#1a2130] hover:scale-110 hover:shadow-[0_0_25px_rgba(251,191,36,0.5)] transition-all group">
-          <span className="group-hover:rotate-12 transition-transform">📖</span>
-        </button>
-
-        {/* Status Window */}
-        <div className="panel-fantasy bg-black/60 backdrop-blur-md p-4 w-56 md:w-72 shadow-[0_0_30px_rgba(0,0,0,0.8)] border border-amber-500/30 cursor-default">
-          <div className="flex justify-between items-end mb-2">
-            <div>
-              <span className="text-[10px] text-amber-400 tracking-widest uppercase font-bold flex items-center gap-1">
-                <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-                음파 술사 (Vocalist)
-              </span>
-              <h3 className="text-xl font-black text-white drop-shadow-md">
-                {userNickname}
-              </h3>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <div className="w-20 md:w-32 bg-gray-900 rounded-full h-2 border border-gray-700 relative overflow-hidden">
+              <div
+                className="absolute top-0 left-0 h-full bg-gradient-to-r from-amber-600 to-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.6)]"
+                style={{ width: "45%" }}
+              />
             </div>
-            <div className="text-right">
-              <span className="text-2xl font-black text-amber-400 drop-shadow-[0_0_10px_rgba(251,191,36,0.5)]">
-                Lv.{userLevel}
-              </span>
-            </div>
+            <span className="text-[9px] text-gray-400 font-bold">EXP</span>
           </div>
-          <div className="w-full bg-gray-900 rounded-full h-2 shadow-inner border border-gray-700 relative overflow-hidden group">
-            <div
-              className="absolute top-0 left-0 h-full bg-gradient-to-r from-amber-600 to-amber-400 shadow-[0_0_10px_rgba(251,191,36,0.8)]"
-              style={{ width: "45%" }}
-            />
-            <div className="absolute top-0 left-0 w-full h-full bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity mix-blend-overlay" />
-          </div>
-          <p className="text-[9px] text-right text-gray-400 mt-1 uppercase font-bold">
-            공명 경험치 (Resonance Exp): 45%
-          </p>
         </div>
-      </motion.div>
+
+        {/* Action Button Row — 4 equal buttons */}
+        <div className="mx-3 mb-3 grid grid-cols-4 gap-2">
+          {/* Grimoire */}
+          <button
+            onClick={() => setShowGrimoire(true)}
+            className="min-h-[56px] flex flex-col items-center justify-center gap-1 panel-fantasy bg-black/70 backdrop-blur-md border-amber-500/40 hover:border-amber-400 hover:bg-black/90 transition-all active:scale-95">
+            <span className="text-xl">📖</span>
+            <span className="text-[9px] text-amber-200 font-bold tracking-wider">
+              마도서
+            </span>
+          </button>
+
+          {/* Trials */}
+          <button
+            onClick={() => router.push("/trial")}
+            className="min-h-[56px] flex flex-col items-center justify-center gap-1 panel-fantasy bg-cyan-950/60 backdrop-blur-md border-cyan-500/40 hover:border-cyan-400 hover:bg-cyan-900/80 transition-all active:scale-95">
+            <span className="text-xl">🎙️</span>
+            <span className="text-[9px] text-cyan-200 font-bold tracking-wider">
+              시련
+            </span>
+          </button>
+
+          {/* Settings / Calibration */}
+          <button
+            onClick={() => router.push("/calibration")}
+            className="min-h-[56px] flex flex-col items-center justify-center gap-1 panel-fantasy bg-black/70 backdrop-blur-md border-slate-500/40 hover:border-slate-400 hover:bg-black/90 transition-all active:scale-95">
+            <span className="text-xl">⚙️</span>
+            <span className="text-[9px] text-slate-300 font-bold tracking-wider">
+              설정
+            </span>
+          </button>
+
+          {/* Tutorial Replay */}
+          <button
+            onClick={() => {
+              if (scarecrow) setSelectedMonster(scarecrow);
+            }}
+            className="min-h-[56px] flex flex-col items-center justify-center gap-1 panel-fantasy bg-black/70 backdrop-blur-md border-amber-500/40 hover:border-amber-400 hover:bg-black/90 transition-all active:scale-95">
+            <span className="text-xl">🪗</span>
+            <span className="text-[9px] text-amber-200 font-bold tracking-wider">
+              훈련
+            </span>
+          </button>
+        </div>
+      </div>
 
       {/* NPC 모달 */}
       <AnimatePresence>

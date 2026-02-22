@@ -46,6 +46,33 @@ function normalizeDb(rawNetDb: number): number {
   return adjusted;
 }
 
+/**
+ * Fuzzy match for Korean STT output.
+ * Strips whitespace, punctuation, and common Korean particles (조사)
+ * before checking if the spoken text contains the keyword.
+ */
+function fuzzyMatch(spokenText: string, keyword: string): boolean {
+  // Strip all whitespace, punctuation, and common Korean particles
+  const particlePattern = /[을를이가은는도에서의로와과만]$/;
+  const clean = (s: string) =>
+    s
+      .replace(/[!?.\s]/g, "") // Remove punctuation & whitespace
+      .replace(particlePattern, "") // Remove trailing Korean particles
+      .toLowerCase();
+
+  const cleanSpoken = clean(spokenText);
+  const cleanKeyword = clean(keyword);
+
+  // Primary: substring match
+  if (cleanSpoken.includes(cleanKeyword)) return true;
+
+  // Secondary: keyword includes spoken (for partial recognition)
+  if (cleanKeyword.length > 3 && cleanKeyword.includes(cleanSpoken))
+    return true;
+
+  return false;
+}
+
 export function useVoiceCombat(classId: string, baseDb: number) {
   const [currentDb, setCurrentDb] = useState(0);
   const [peakDb, setPeakDb] = useState(0);
@@ -194,10 +221,8 @@ export function useVoiceCombat(classId: string, baseDb: number) {
     }
 
     // 1. Check Ultimate Skills
-    const ultimate = ULTIMATE_SKILLS.find(
-      (u) =>
-        normalizedWord.includes(u.word) ||
-        normalizedWord.replace(/\s+/g, "").includes(u.word.replace(/\s+/g, "")),
+    const ultimate = ULTIMATE_SKILLS.find((u) =>
+      fuzzyMatch(normalizedWord, u.word),
     );
     if (ultimate) {
       if (peakDb >= ultimate.reqDb) {
@@ -212,10 +237,9 @@ export function useVoiceCombat(classId: string, baseDb: number) {
         return { damage: 0, logs, matchedKeyword: "" };
       }
     } else {
-      // 2. Check Novice Suffixes
-      const novice = NOVICE_KEYWORDS.find(
-        (n) =>
-          normalizedWord.endsWith(n.word) || normalizedWord.includes(n.word),
+      // 2. Check Novice Keywords (fuzzy match)
+      const novice = NOVICE_KEYWORDS.find((n) =>
+        fuzzyMatch(normalizedWord, n.word),
       );
       if (novice) {
         baseDamage = novice.baseDmg;
