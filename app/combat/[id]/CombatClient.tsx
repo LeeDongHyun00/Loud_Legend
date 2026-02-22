@@ -58,7 +58,9 @@ export default function CombatClient({
   const [baseDb, setBaseDb] = useState(30);
 
   // Game State
-  const maxMonsterHp = isTutorial ? 100 : targetMonster.requiredLevel * 100;
+  const maxMonsterHp = isTutorial
+    ? 300
+    : targetMonster.requiredLevel * 200 + 100;
   const [monsterHp, setMonsterHp] = useState(maxMonsterHp);
   const [isDead, setIsDead] = useState(false);
   const [battleLogs, setBattleLogs] = useState<string[]>([
@@ -386,31 +388,60 @@ export default function CombatClient({
         </motion.div>
       </div>
 
-      {/* ═══ LIVE STT TRANSCRIPT PILL ═══ */}
+      {/* ═══ THE ECHO MIRROR (LIVE STT VISUALIZER) ═══ */}
       <AnimatePresence>
         {isListening && (
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 10 }}
-            className="absolute left-1/2 -translate-x-1/2 z-35 px-3"
-            style={{ bottom: "48%" }}>
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            className="absolute left-1/2 -translate-x-1/2 z-35 w-[90%] md:w-[600px] pointer-events-none"
+            style={{ bottom: "45%" }}>
             <div
-              className={`flex items-center gap-2 backdrop-blur-xl border rounded-full px-4 py-2 max-w-xs transition-all duration-300 ${
+              className={`flex flex-col items-center justify-center min-h-[120px] p-6 backdrop-blur-2xl border rounded-3xl transition-all duration-500 ${
                 currentMatchedKeyword
-                  ? "bg-green-950/80 border-green-400/80 shadow-[0_0_30px_rgba(74,222,128,0.4)]"
-                  : "bg-black/80 border-cyan-500/40 shadow-[0_0_20px_rgba(34,211,238,0.3)]"
+                  ? "bg-green-950/60 border-green-400/80 shadow-[0_0_50px_rgba(74,222,128,0.5)]"
+                  : "bg-cyan-950/60 border-cyan-500/50 shadow-[0_0_40px_rgba(34,211,238,0.3)]"
               }`}>
+              {/* Status Header */}
+              <div className="flex items-center gap-2 mb-3 opacity-80">
+                <span
+                  className={`w-3 h-3 rounded-full animate-ping flex-shrink-0 ${currentMatchedKeyword ? "bg-green-400" : "bg-cyan-400"}`}
+                />
+                <span className="text-xs uppercase tracking-widest font-bold text-gray-300">
+                  {currentMatchedKeyword
+                    ? "Target Locked"
+                    : "Echo Mirror Active"}
+                </span>
+              </div>
+
+              {/* Spectral Text Display */}
               <span
-                className={`w-3 h-3 rounded-full animate-pulse flex-shrink-0 ${currentMatchedKeyword ? "bg-green-400" : "bg-red-500"}`}
-              />
-              <span className="text-xs text-gray-400 font-bold flex-shrink-0">
-                {currentMatchedKeyword ? "✅" : "🎤"}
+                className={`text-lg md:text-2xl font-black text-center break-keep leading-relaxed transition-colors duration-300 ${
+                  currentMatchedKeyword
+                    ? "text-green-300 drop-shadow-[0_0_15px_rgba(74,222,128,0.9)]"
+                    : "text-cyan-100 drop-shadow-[0_0_15px_rgba(34,211,238,0.7)]"
+                }`}>
+                {attackWord
+                  ? `"${attackWord}"`
+                  : "목소리를 내어 파동을 일으키세요..."}
               </span>
-              <span
-                className={`text-sm font-bold truncate ${currentMatchedKeyword ? "text-green-300 drop-shadow-[0_0_8px_rgba(74,222,128,0.8)]" : "text-cyan-300"}`}>
-                {attackWord || "음파 감지 중..."}
-              </span>
+
+              {/* Matched Keyword Highlight */}
+              <AnimatePresence>
+                {currentMatchedKeyword && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    className="mt-4 px-4 py-1.5 bg-green-900/80 border border-green-400 rounded-full flex items-center gap-2">
+                    <span className="text-sm">✅</span>
+                    <span className="text-sm font-bold text-green-300 tracking-wider">
+                      {currentMatchedKeyword} 장전 완료
+                    </span>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </motion.div>
         )}
