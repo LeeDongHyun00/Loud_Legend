@@ -1,6 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
-import { NOVICE_KEYWORDS, ULTIMATE_SKILLS } from "@/hooks/useVoiceCombat";
+import { NOVICE_KEYWORDS, ULTIMATE_SKILLS } from "@/lib/data/combatConfig";
 
 export default function GrimoireModal({ onClose }: { onClose: () => void }) {
   return (
