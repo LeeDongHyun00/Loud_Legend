@@ -1,0 +1,84 @@
+@import url("https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* 🎨 Visual Style Guide: "Echoing Legends" Theme */
+  --color-gold: #f5a623;
+  --color-gold-light: #ffd700;
+  --color-crimson: #dc2626;
+  --color-deep-navy: #0a0e1a;
+  --color-panel-bg: rgba(10, 14, 26, 0.92);
+  --color-panel-border: rgba(245, 166, 35, 0.3);
+  --font-display: "Cinzel", serif;
+  --font-body: "Noto Sans KR", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-deep-navy);
+  color: #e2e8f0;
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 판타지 RPG 제목 폰트 */
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+}
+
+/* 커스텀 스크롤바 */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-gold);
+  border-radius: 3px;
+}
+
+/* 골든 글로우 버튼 유틸리티 */
+@layer utilities {
+  .btn-gold {
+    @apply px-6 py-3 bg-gradient-to-r from-amber-600 to-yellow-500 text-white font-bold rounded-lg
+           shadow-[0_0_15px_rgba(245,166,35,0.4)] hover:shadow-[0_0_25px_rgba(245,166,35,0.6)]
+           transition-all duration-300 hover:scale-105 active:scale-95;
+  }
+
+  .btn-crimson {
+    @apply px-6 py-3 bg-gradient-to-r from-red-700 to-red-500 text-white font-bold rounded-lg
+           shadow-[0_0_15px_rgba(220,38,38,0.4)] hover:shadow-[0_0_25px_rgba(220,38,38,0.6)]
+           transition-all duration-300 hover:scale-105 active:scale-95;
+  }
+
+  .panel-fantasy {
+    @apply bg-[rgba(10,14,26,0.92)] border border-amber-500/30 rounded-xl
+           shadow-[0_0_30px_rgba(245,166,35,0.1)] backdrop-blur-lg;
+  }
+
+  .text-glow-gold {
+    text-shadow:
+      0 0 10px rgba(245, 166, 35, 0.5),
+      0 0 20px rgba(245, 166, 35, 0.3);
+  }
+
+  .text-glow-crimson {
+    text-shadow:
+      0 0 10px rgba(220, 38, 38, 0.5),
+      0 0 20px rgba(220, 38, 38, 0.3);
+  }
+}
