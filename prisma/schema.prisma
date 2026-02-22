@@ -3,19 +3,19 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite" // Vercel 배포 시 postgresql로 변경 가능
-  url      = "file:./dev.db"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
   id             String   @id @default(cuid())
   username       String   @unique
   nickname       String   @unique
-  passwordHash   String // 암호화된 비밀번호
+  passwordHash   String
   level          Int      @default(1)
   exp            Int      @default(0)
-  classId        String? // "berserker", "assassin", "mage" 중 하나
-  unlockedSkills String   @default("[]") // JSON 배열 형태의 문자열
+  classId        String?
+  unlockedSkills String   @default("[]")
   currentQuest   String   @default("마에스트로와 대화하기")
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
