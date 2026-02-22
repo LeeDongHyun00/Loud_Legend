@@ -3,7 +3,6 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import CombatClient from "./CombatClient";
-import TutorialCombatClient from "./TutorialCombatClient";
 import { MONSTERS } from "@/lib/data/Lore";
 
 export default async function CombatPage({
@@ -31,9 +30,11 @@ export default async function CombatPage({
     redirect("/map");
   }
 
-  if (targetMonster.id === "scarecrow") {
-    return <TutorialCombatClient user={user} targetMonster={targetMonster} />;
-  }
-
-  return <CombatClient user={user} targetMonster={targetMonster} />;
+  return (
+    <CombatClient
+      user={user}
+      targetMonster={targetMonster}
+      isTutorial={targetMonster.id === "scarecrow"}
+    />
+  );
 }
