@@ -23,6 +23,29 @@ export const ULTIMATE_SKILLS = [
   },
 ];
 
+/**
+ * Sonic Compression: Normalizes raw dB difference into a balanced value.
+ * - Mobile devices get a 35% reduction (mic proximity compensation).
+ * - Above 50 net dB, logarithmic diminishing returns kick in.
+ */
+function normalizeDb(rawNetDb: number): number {
+  if (rawNetDb <= 0) return 0;
+
+  // Detect mobile via touch capability
+  const isMobile = typeof window !== "undefined" && "ontouchstart" in window;
+  const scaleFactor = isMobile ? 0.65 : 1.0;
+  const adjusted = rawNetDb * scaleFactor;
+
+  // Logarithmic compression above threshold
+  const threshold = 50;
+  if (adjusted > threshold) {
+    const excess = adjusted - threshold;
+    return threshold + 20 * Math.log10(1 + excess);
+  }
+
+  return adjusted;
+}
+
 export function useVoiceCombat(classId: string, baseDb: number) {
   const [currentDb, setCurrentDb] = useState(0);
   const [peakDb, setPeakDb] = useState(0);
@@ -156,8 +179,8 @@ export function useVoiceCombat(classId: string, baseDb: number) {
   };
 
   const calculateDamageInfo = (targetName: string) => {
-    let netDb = peakDb - baseDb;
-    if (netDb < 0) netDb = 0;
+    const rawNetDb = Math.max(0, peakDb - baseDb);
+    const netDb = normalizeDb(rawNetDb);
 
     const normalizedWord = attackWord.replace(/[!.?]/g, "").trim();
     let baseDamage = 0;
@@ -230,8 +253,8 @@ export function useVoiceCombat(classId: string, baseDb: number) {
   };
 
   const calculateEchoDamage = () => {
-    let netDb = peakDb - baseDb;
-    if (netDb < 0) netDb = 0;
+    const rawNetDb = Math.max(0, peakDb - baseDb);
+    const netDb = normalizeDb(rawNetDb);
 
     const finalDamage = Math.floor(netDb * 1.5);
     const logs: string[] = [];

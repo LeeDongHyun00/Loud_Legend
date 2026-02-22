@@ -203,22 +203,22 @@ export default function CombatClient({
       </div>
 
       {/* 3. Center: Monster View Area */}
-      <div className="flex-1 flex flex-col items-center justify-center p-8 relative z-10 pt-20">
+      <div className="flex-1 flex flex-col items-center justify-center p-4 md:p-8 relative z-10 pt-16 md:pt-20">
         {/* Monster HP Bar & Name */}
         <div className="flex flex-col items-center mb-8 relative">
-          <h2 className="text-2xl font-black text-white tracking-widest mb-3 drop-shadow-[0_0_10px_rgba(255,255,255,0.5)] flex items-center gap-3">
-            <span className="w-12 h-[2px] bg-amber-400"></span>
+          <h2 className="text-lg md:text-2xl font-black text-white tracking-widest mb-2 md:mb-3 drop-shadow-[0_0_10px_rgba(255,255,255,0.5)] flex items-center gap-2 md:gap-3">
+            <span className="w-8 md:w-12 h-[2px] bg-amber-400"></span>
             {targetMonster.name}
-            <span className="w-12 h-[2px] bg-amber-400"></span>
+            <span className="w-8 md:w-12 h-[2px] bg-amber-400"></span>
           </h2>
-          <div className="w-80 bg-gray-900 rounded-full h-3 shadow-[0_0_10px_rgba(0,0,0,0.8)_inner] relative overflow-hidden border border-gray-700">
+          <div className="w-full max-w-xs bg-gray-900 rounded-full h-3 shadow-[0_0_10px_rgba(0,0,0,0.8)_inner] relative overflow-hidden border border-gray-700">
             <motion.div
               className="absolute top-0 left-0 h-full bg-gradient-to-r from-red-600 to-red-400 shadow-[0_0_10px_rgba(239,68,68,0.8)]"
               animate={{ width: `${hpPercentage}%` }}
               transition={{ duration: 0.3 }}
             />
           </div>
-          <span className="absolute -right-12 top-10 text-xs font-bold text-gray-300">
+          <span className="text-xs font-bold text-gray-300 mt-1">
             {Math.round(monsterHp)} / {maxMonsterHp}
           </span>
         </div>
@@ -254,7 +254,7 @@ export default function CombatClient({
                     transition: { repeat: Infinity, duration: 2.5 },
                   }
           }
-          className={`relative w-72 h-72 rounded-full border-[2px] bg-black/40 backdrop-blur-sm flex items-center justify-center overflow-hidden z-20 ${getBiomeLuminousAccent(targetMonster.biome)}`}>
+          className={`relative w-40 h-40 md:w-72 md:h-72 rounded-full border-[2px] bg-black/40 backdrop-blur-sm flex items-center justify-center overflow-hidden z-20 ${getBiomeLuminousAccent(targetMonster.biome)}`}>
           {isDead ? (
             <span className="text-8xl drop-shadow-lg filter grayscale">💀</span>
           ) : (
@@ -286,7 +286,7 @@ export default function CombatClient({
       </div>
 
       {/* 4. Bottom: Luminous Command Dashboard */}
-      <div className="h-[45%] md:h-[40%] w-full bg-white/60 backdrop-blur-xl border-t border-white/80 rounded-t-[3rem] p-6 flex flex-col md:flex-row gap-6 relative z-30 shadow-[0_-20px_40px_rgba(0,0,0,0.05)] mx-auto max-w-5xl">
+      <div className="w-full bg-white/60 backdrop-blur-xl border-t border-white/80 rounded-t-[2rem] md:rounded-t-[3rem] p-4 md:p-6 flex flex-col md:flex-row gap-4 md:gap-6 relative z-30 shadow-[0_-20px_40px_rgba(0,0,0,0.05)] mx-auto max-w-5xl overflow-y-auto max-h-[55svh]">
         {/* Left: Resonance Gauge & STT Text */}
         <div className="w-full md:w-1/2 flex flex-col gap-4 justify-between">
           {/* Battle Log Box */}

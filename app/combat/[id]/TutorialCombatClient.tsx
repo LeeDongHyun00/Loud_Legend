@@ -149,13 +149,13 @@ export default function TutorialCombatClient({
       </div>
 
       {/* 1. 상단: 몬스터 뷰 영역 */}
-      <div className="flex-1 flex flex-col items-center justify-center p-8 relative z-10 pt-20">
+      <div className="flex-1 flex flex-col items-center justify-center p-4 md:p-8 relative z-10 pt-16 md:pt-20">
         <h2 className="text-2xl font-bold text-amber-500 mb-2 tracking-widest text-glow-gold">
           {targetMonster.name}
         </h2>
 
         {/* 몬스터 체력바 */}
-        <div className="w-64 bg-gray-900 border-2 border-amber-500/50 h-4 mb-8 rounded shadow-[0_0_10px_rgba(245,166,35,0.3)]">
+        <div className="w-full max-w-[16rem] bg-gray-900 border-2 border-amber-500/50 h-4 mb-6 md:mb-8 rounded shadow-[0_0_10px_rgba(245,166,35,0.3)]">
           <motion.div
             className="h-full bg-gradient-to-r from-red-600 to-red-400"
             animate={{ width: `${(monsterHp / 100) * 100}%` }}
@@ -186,7 +186,7 @@ export default function TutorialCombatClient({
                     transition: { repeat: Infinity, duration: 2 },
                   }
           }
-          className={`relative w-64 h-64 border-4 border-amber-500/50 bg-gray-900 rounded-xl flex items-center justify-center shadow-[0_0_30px_rgba(245,166,35,0.4)] overflow-hidden`}>
+          className={`relative w-40 h-40 md:w-64 md:h-64 border-4 border-amber-500/50 bg-gray-900 rounded-xl flex items-center justify-center shadow-[0_0_30px_rgba(245,166,35,0.4)] overflow-hidden`}>
           {!isDead && (
             <Image
               src={targetMonster.image}
@@ -243,7 +243,7 @@ export default function TutorialCombatClient({
       </AnimatePresence>
 
       {/* 3. 하단 커맨드 패널 */}
-      <div className="h-[40%] md:h-[35%] w-full panel-fantasy border-t-2 border-b-0 rounded-t-3xl p-6 flex flex-col md:flex-row gap-6 relative z-20 mx-auto max-w-5xl">
+      <div className="w-full panel-fantasy border-t-2 border-b-0 rounded-t-2xl md:rounded-t-3xl p-4 md:p-6 flex flex-col md:flex-row gap-4 md:gap-6 relative z-20 mx-auto max-w-5xl overflow-y-auto max-h-[55svh]">
         {/* 좌측: 플레이어 상태 및 셔우트 미터 */}
         <div className="w-full md:w-1/2 bg-black/50 border border-amber-500/20 rounded-xl p-4 flex flex-col relative overflow-hidden">
           <div className="flex justify-between text-xs text-amber-200 font-bold mb-2 tracking-widest z-10">
